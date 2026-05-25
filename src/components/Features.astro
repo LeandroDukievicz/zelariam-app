@@ -1,0 +1,157 @@
+---
+const features = [
+	{
+		label: 'Medicamentos',
+		title: 'Doses sem desencontro',
+		text: 'Horários, confirmação de dose e histórico ficam disponíveis para todos os responsáveis.',
+		color: 'var(--amber)',
+		tint: 'var(--amber-tint)',
+		icon: 'Meds'
+	},
+	{
+		label: 'Rotina',
+		title: 'Dia organizado por prioridade',
+		text: 'Banho, alimentação, consultas e tarefas aparecem em uma linha do tempo fácil de acompanhar.',
+		color: 'var(--sage)',
+		tint: 'var(--sage-tint)',
+		icon: 'Task'
+	},
+	{
+		label: 'Saúde',
+		title: 'Sinais vitais com contexto',
+		text: 'Registre pressão, glicemia, sintomas e observações para entender mudanças importantes.',
+		color: 'var(--sky)',
+		tint: 'var(--sky-tint)',
+		icon: 'Vitals'
+	},
+	{
+		label: 'Família',
+		title: 'Comunicação centralizada',
+		text: 'Cada cuidado registrado reduz mensagens soltas e deixa decisões visíveis para a família.',
+		color: 'var(--primary)',
+		tint: 'var(--primary-tint)',
+		icon: 'Care'
+	}
+];
+---
+<section id="features" class="features">
+	<div class="container">
+		<div class="section-header">
+			<span class="section-kicker">Recursos essenciais</span>
+			<h2>O que precisa acontecer hoje aparece sem ruído.</h2>
+			<p>O Zelariam transforma o cuidado diário em registros simples, compartilháveis e fáceis de revisar.</p>
+		</div>
+
+		<div class="features-grid">
+			{features.map((feature) => (
+				<article class="feature-card">
+					<div class="feature-icon" style={`background: ${feature.tint}; color: ${feature.color};`} aria-hidden="true">
+						<span>{feature.icon}</span>
+					</div>
+					<span class="feature-label">{feature.label}</span>
+					<h3>{feature.title}</h3>
+					<p>{feature.text}</p>
+				</article>
+			))}
+		</div>
+	</div>
+</section>
+
+<style>
+	.features {
+		background: var(--bg-warm);
+	}
+
+	.section-header {
+		max-width: 680px;
+		margin-bottom: 44px;
+	}
+
+	.section-kicker {
+		display: block;
+		margin-bottom: 12px;
+		color: var(--primary-deep);
+		font-size: 0.82rem;
+		font-weight: 800;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	h2 {
+		margin-bottom: 18px;
+		font-size: clamp(2.2rem, 5vw, 3.7rem);
+		line-height: 1;
+	}
+
+	.section-header p {
+		max-width: 610px;
+		color: var(--text-soft);
+		font-size: 1.12rem;
+		line-height: 1.6;
+	}
+
+	.features-grid {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 18px;
+	}
+
+	.feature-card {
+		min-height: 300px;
+		padding: 28px;
+		border: 1px solid var(--line);
+		border-radius: 8px;
+		background: white;
+		box-shadow: var(--shadow);
+	}
+
+	.feature-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 58px;
+		height: 58px;
+		margin-bottom: 24px;
+		border-radius: 8px;
+		font-size: 0.78rem;
+		font-weight: 800;
+	}
+
+	.feature-label {
+		color: var(--text-mute);
+		font-size: 0.78rem;
+		font-weight: 800;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	h3 {
+		margin: 10px 0 14px;
+		font-family: "DM Sans", system-ui, sans-serif;
+		font-size: 1.2rem;
+		line-height: 1.25;
+		font-weight: 800;
+	}
+
+	.feature-card p {
+		color: var(--text-soft);
+		font-size: 0.98rem;
+		line-height: 1.6;
+	}
+
+	@media (max-width: 1024px) {
+		.features-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 620px) {
+		.features-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.feature-card {
+			min-height: auto;
+		}
+	}
+</style>

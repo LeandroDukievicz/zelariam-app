@@ -1,0 +1,282 @@
+---
+---
+<section class="hero">
+	<div class="container hero-content">
+		<div class="hero-copy">
+			<span class="eyebrow">App de cuidado familiar</span>
+			<h1>Zelariam</h1>
+			<p class="lead">Medicamentos, rotina, sinais vitais e comunicação em um só lugar para famílias que cuidam de idosos sem improviso.</p>
+			<div class="hero-actions">
+				<a href="#cta" class="btn-hero-primary">Entrar na lista</a>
+				<a href="#showcase" class="btn-hero-secondary">Ver o aplicativo</a>
+			</div>
+		</div>
+
+		<div class="hero-proof" aria-label="Resumo do aplicativo">
+			<div>
+				<strong>3 modos</strong>
+				<span>idoso, cuidador e família</span>
+			</div>
+			<div>
+				<strong>Rotina clara</strong>
+				<span>doses, consultas e tarefas</span>
+			</div>
+			<div>
+				<strong>Registro seguro</strong>
+				<span>histórico para decisões rápidas</span>
+			</div>
+		</div>
+	</div>
+
+	<div class="hero-media" aria-hidden="true">
+		<img class="screen screen-main" src="/screenshots/focus-hoje.png" alt="" />
+		<img class="screen screen-left" src="/screenshots/onboarding.png" alt="" />
+		<img class="screen screen-right" src="/screenshots/03-dose-meds-modos.png" alt="" />
+	</div>
+</section>
+
+<style>
+	.hero {
+		position: relative;
+		min-height: clamp(680px, 86svh, 900px);
+		overflow: hidden;
+		display: flex;
+		align-items: center;
+		background:
+			linear-gradient(90deg, rgba(51, 42, 38, 0.9) 0%, rgba(51, 42, 38, 0.68) 42%, rgba(51, 42, 38, 0.18) 100%),
+			var(--bg);
+		padding: 92px 0 48px;
+	}
+
+	.hero-media {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+	}
+
+	.screen {
+		position: absolute;
+		width: min(34vw, 360px);
+		aspect-ratio: 9 / 16;
+		border: 10px solid rgba(255, 255, 255, 0.72);
+		border-radius: 30px;
+		box-shadow: 0 34px 90px rgba(37, 28, 24, 0.34);
+		background: var(--white);
+		object-fit: cover;
+		object-position: center;
+	}
+
+	.screen-main {
+		right: 12vw;
+		top: 8vh;
+		width: min(38vw, 410px);
+		z-index: 2;
+	}
+
+	.screen-left {
+		right: 32vw;
+		bottom: -28vh;
+		width: min(29vw, 320px);
+		transform: rotate(-5deg);
+		opacity: 0.9;
+	}
+
+	.screen-right {
+		right: -2vw;
+		bottom: -7vh;
+		transform: rotate(4deg);
+		opacity: 0.92;
+	}
+
+	.hero-content {
+		position: relative;
+		z-index: 3;
+		width: 100%;
+	}
+
+	.hero-copy {
+		max-width: 610px;
+		color: white;
+	}
+
+	.eyebrow {
+		display: inline-flex;
+		align-items: center;
+		min-height: 32px;
+		padding: 7px 14px;
+		border: 1px solid rgba(255, 255, 255, 0.28);
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.12);
+		font-size: 0.82rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	h1 {
+		margin: 20px 0 18px;
+		font-size: clamp(4rem, 10vw, 8.4rem);
+		line-height: 0.88;
+	}
+
+	.lead {
+		max-width: 560px;
+		margin-bottom: 34px;
+		color: rgba(255, 255, 255, 0.9);
+		font-size: clamp(1.1rem, 2vw, 1.42rem);
+		line-height: 1.55;
+	}
+
+	.hero-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 14px;
+	}
+
+	.btn-hero-primary,
+	.btn-hero-secondary {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 52px;
+		padding: 0 24px;
+		border-radius: 14px;
+		font-weight: 700;
+	}
+
+	.btn-hero-primary {
+		background: var(--primary);
+		color: white;
+		box-shadow: 0 16px 32px rgba(116, 56, 35, 0.3);
+	}
+
+	.btn-hero-secondary {
+		background: rgba(255, 255, 255, 0.12);
+		color: white;
+		border: 1px solid rgba(255, 255, 255, 0.32);
+	}
+
+	.btn-hero-primary:hover,
+	.btn-hero-secondary:hover {
+		transform: translateY(-2px);
+	}
+
+	.hero-proof {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 1px;
+		width: min(100%, 820px);
+		margin-top: 72px;
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		border-radius: 18px;
+		overflow: hidden;
+		background: rgba(255, 255, 255, 0.12);
+		backdrop-filter: blur(14px);
+	}
+
+	.hero-proof div {
+		padding: 20px;
+		color: white;
+		background: rgba(255, 255, 255, 0.06);
+	}
+
+	.hero-proof strong,
+	.hero-proof span {
+		display: block;
+	}
+
+	.hero-proof strong {
+		margin-bottom: 6px;
+		font-size: 1.05rem;
+	}
+
+	.hero-proof span {
+		color: rgba(255, 255, 255, 0.74);
+		font-size: 0.94rem;
+		line-height: 1.35;
+	}
+
+	@media (max-width: 900px) {
+		.hero {
+			align-items: flex-start;
+			flex-direction: column;
+			min-height: auto;
+			padding: 70px 0 36px;
+			background:
+				linear-gradient(180deg, rgba(51, 42, 38, 0.9) 0%, rgba(51, 42, 38, 0.72) 56%, rgba(51, 42, 38, 0.28) 100%),
+				var(--bg);
+		}
+
+		.hero-copy {
+			max-width: 680px;
+		}
+
+		.hero-media {
+			position: relative;
+			width: 100%;
+			height: 390px;
+			margin-top: 42px;
+			inset: auto;
+		}
+
+		.screen {
+			width: 230px;
+			border-width: 7px;
+			border-radius: 24px;
+		}
+
+		.screen-main {
+			left: 50%;
+			right: auto;
+			top: 0;
+			width: 270px;
+			transform: translateX(-50%);
+		}
+
+		.screen-left {
+			left: 2%;
+			right: auto;
+			bottom: 5px;
+			width: 230px;
+		}
+
+		.screen-right {
+			right: 1%;
+			bottom: 0;
+		}
+
+		.hero-proof {
+			grid-template-columns: 1fr;
+			margin-top: 34px;
+		}
+	}
+
+	@media (max-width: 560px) {
+		.hero {
+			padding-top: 48px;
+		}
+
+		.hero-actions a {
+			width: 100%;
+		}
+
+		.hero-media {
+			height: 320px;
+			margin-left: -24px;
+			margin-right: -24px;
+		}
+
+		.screen {
+			width: 190px;
+			border-width: 6px;
+		}
+
+		.screen-main {
+			width: 230px;
+		}
+
+		.screen-left {
+			width: 190px;
+		}
+	}
+</style>

@@ -1,0 +1,108 @@
+---
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Zelariam organiza medicamentos, rotina, sinais vitais e comunicação familiar para o cuidado de idosos." />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+	</head>
+	<body>
+		<slot />
+	</body>
+</html>
+<style is:global>
+	:root {
+		--bg: #FBF6EF;
+		--bg-soft: #F4ECDF;
+		--bg-warm: #FFFDF8;
+		--text: #332A26;
+		--text-soft: #6B5A52;
+		--text-mute: #9C8C82;
+		--primary: #C97B5C;
+		--primary-deep: #A85F44;
+		--sage: #6F9C82;
+		--gold: #D9A659;
+		--amber: #E08A3C;
+		--coral: #C9543D;
+		--sky: #5E8AAE;
+		--primary-tint: #F7E0D6;
+		--sage-tint: #E3EFE7;
+		--gold-tint: #F8EACC;
+		--amber-tint: #F9E3CF;
+		--coral-tint: #F4D8D2;
+		--sky-tint: #DDEAF3;
+		--line: #ECE4D8;
+		--white: #FFFFFF;
+		--shadow: 0 1px 2px rgba(58,46,42,.04), 0 8px 22px rgba(58,46,42,.08);
+		--shadow-lg: 0 2px 4px rgba(58,46,42,.05), 0 20px 54px rgba(58,46,42,.14);
+	}
+
+	html, body {
+		margin: 0;
+		padding: 0;
+		background: var(--bg);
+		color: var(--text);
+		font-family: "DM Sans", system-ui, sans-serif;
+		-webkit-font-smoothing: antialiased;
+		scroll-behavior: smooth;
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	img {
+		display: block;
+		max-width: 100%;
+	}
+
+	h1, h2, h3, .font-serif {
+		font-family: "DM Serif Display", serif;
+		font-weight: 400;
+	}
+
+	h1, h2, h3, h4, p {
+		margin-top: 0;
+	}
+
+	a {
+		text-decoration: none;
+		color: inherit;
+		transition: all 0.2s ease;
+	}
+
+	button {
+		cursor: pointer;
+		border: none;
+		font-family: inherit;
+	}
+
+	.container {
+		max-width: 1100px;
+		margin: 0 auto;
+		padding: 0 24px;
+	}
+
+	section {
+		padding: 80px 0;
+	}
+
+	@media (max-width: 768px) {
+		section {
+			padding: 60px 0;
+		}
+	}
+</style>
