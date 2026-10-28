@@ -37,11 +37,13 @@ import com.zelariam.cuidar.ui.components.CuidarTone
 import com.zelariam.cuidar.ui.components.ScreenColumn
 import com.zelariam.cuidar.ui.components.ScreenGutter
 import com.zelariam.cuidar.ui.theme.LocalCuidarPalette
+import com.zelariam.cuidar.ui.state.DemoDoseStatus
 
 @Composable
 fun CaregiverModeScreen(
     onDose: () -> Unit,
     onFamily: () -> Unit,
+    doseStatus: DemoDoseStatus,
 ) {
     val p = LocalCuidarPalette.current
     ScreenColumn {
@@ -75,13 +77,29 @@ fun CaregiverModeScreen(
                             CuidarIcon("pill", size = 28.dp, tint = p.amber)
                         }
                         Column(Modifier.weight(1f)) {
-                            CuidarBadge("Agora · 14:30", tone = CuidarTone.Amber, dot = true, small = true)
+                            CuidarBadge(
+                                text = when (doseStatus) {
+                                    DemoDoseStatus.Pending -> "Agora · 14:30"
+                                    DemoDoseStatus.Taken -> "Dose registrada · 14:48"
+                                    DemoDoseStatus.Snoozed -> "Adiada até 15:18"
+                                    DemoDoseStatus.NotTaken -> "Marcada como não tomada"
+                                },
+                                tone = if (doseStatus == DemoDoseStatus.Taken) CuidarTone.Sage else CuidarTone.Amber,
+                                dot = true,
+                                small = true,
+                            )
                             CText("Atenolol · 25 mg", size = 17.sp, weight = FontWeight.Bold, modifier = Modifier.padding(top = 4.dp))
                             CText("1 comprimido · com água", size = 12.5.sp, color = p.textSoft)
                         }
                     }
                     Column(Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)) {
-                        CuidarButton("Confirmar — tomou", modifier = Modifier.fillMaxWidth(), height = 64.dp, icon = "check", onClick = onDose)
+                        CuidarButton(
+                            if (doseStatus == DemoDoseStatus.Taken) "Ver ou corrigir registro" else "Confirmar — tomou",
+                            modifier = Modifier.fillMaxWidth(),
+                            height = 64.dp,
+                            icon = if (doseStatus == DemoDoseStatus.Taken) "note" else "check",
+                            onClick = onDose,
+                        )
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 8.dp)) {
                             CuidarButton("Adiar", modifier = Modifier.weight(1f), style = CuidarButtonStyle.Ghost, height = 36.dp, onClick = onDose)
                             CuidarButton("Não tomou", modifier = Modifier.weight(1f), style = CuidarButtonStyle.Ghost, height = 36.dp, onClick = onDose)
@@ -165,6 +183,7 @@ private fun QuickCareCard(label: String, icon: String, tone: CuidarTone, modifie
 fun ElderModeScreen(
     onDose: () -> Unit,
     onHelp: () -> Unit,
+    doseStatus: DemoDoseStatus,
 ) {
     val p = LocalCuidarPalette.current
     ScreenColumn {
@@ -182,14 +201,29 @@ fun ElderModeScreen(
                             CuidarIcon("pill", size = 42.dp, tint = p.amber)
                         }
                         Column(Modifier.weight(1f)) {
-                            CText("Agora é hora do", size = 16.sp, weight = FontWeight.SemiBold, color = p.textSoft)
+                            CText(if (doseStatus == DemoDoseStatus.Pending) "Agora é hora do" else "Status da dose", size = 16.sp, weight = FontWeight.SemiBold, color = p.textSoft)
                             CText("Atenolol", size = 28.sp, weight = FontWeight.Bold, modifier = Modifier.padding(top = 4.dp))
-                            CText("1 comprimido", size = 18.sp, color = p.textSoft, modifier = Modifier.padding(top = 2.dp))
+                            CText(
+                                when (doseStatus) {
+                                    DemoDoseStatus.Pending -> "1 comprimido"
+                                    DemoDoseStatus.Taken -> "Registrada nesta sessão"
+                                    DemoDoseStatus.Snoozed -> "Adiada por 30 min"
+                                    DemoDoseStatus.NotTaken -> "Marcada como não tomada"
+                                },
+                                size = 16.sp,
+                                color = p.textSoft,
+                                modifier = Modifier.padding(top = 2.dp),
+                            )
                         }
                     }
                     Column(Modifier.padding(16.dp)) {
-                        CuidarButton("Já tomei", modifier = Modifier.fillMaxWidth(), height = 72.dp, icon = "check", onClick = onDose)
-                        CuidarButton("Ainda não tomei", modifier = Modifier.fillMaxWidth().padding(top = 10.dp), style = CuidarButtonStyle.Ghost, height = 52.dp, onClick = onDose)
+                        CuidarButton(
+                            if (doseStatus == DemoDoseStatus.Taken) "Ver ou corrigir registro" else "Já tomei",
+                            modifier = Modifier.fillMaxWidth(), height = 72.dp,
+                            icon = if (doseStatus == DemoDoseStatus.Taken) "note" else "check",
+                            onClick = onDose,
+                        )
+                        if (doseStatus != DemoDoseStatus.Taken) CuidarButton("Ainda não tomei", modifier = Modifier.fillMaxWidth().padding(top = 10.dp), style = CuidarButtonStyle.Ghost, height = 52.dp, onClick = onDose)
                     }
                 }
             }

@@ -2,6 +2,7 @@ package com.zelariam.cuidar.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,6 +39,7 @@ import com.zelariam.cuidar.ui.components.CuidarTone
 import com.zelariam.cuidar.ui.components.ScreenColumn
 import com.zelariam.cuidar.ui.components.ScreenGutter
 import com.zelariam.cuidar.ui.theme.LocalCuidarPalette
+import com.zelariam.cuidar.ui.state.DemoDoseStatus
 
 @Composable
 fun DashboardScreen(
@@ -47,6 +49,9 @@ fun DashboardScreen(
     onAgenda: () -> Unit,
     onAlerts: () -> Unit,
     onElderMode: () -> Unit,
+    doneTasks: Set<String>,
+    doseStatus: DemoDoseStatus,
+    onToggleTask: (String) -> Unit,
 ) {
     val p = LocalCuidarPalette.current
     ScreenColumn {
@@ -102,14 +107,31 @@ fun DashboardScreen(
                             CuidarIcon("pill", size = 28.dp, tint = p.amber)
                         }
                         Column(Modifier.weight(1f)) {
-                            CuidarBadge("Em 18 min", tone = CuidarTone.Amber, dot = true, small = true)
+                            CuidarBadge(
+                                text = when (doseStatus) {
+                                    DemoDoseStatus.Pending -> "Em 18 min"
+                                    DemoDoseStatus.Taken -> "Dose registrada"
+                                    DemoDoseStatus.Snoozed -> "Adiada 30 min"
+                                    DemoDoseStatus.NotTaken -> "Não tomou"
+                                },
+                                tone = if (doseStatus == DemoDoseStatus.Taken) CuidarTone.Sage else CuidarTone.Amber,
+                                dot = true,
+                                small = true,
+                            )
                             CText("Atenolol · 25 mg", size = 16.sp, weight = FontWeight.Bold, modifier = Modifier.padding(top = 3.dp))
                             CText("14:30 · 1 comprimido", size = 13.sp, color = p.textSoft)
                         }
                     }
                     Row(modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, bottom = 16.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        CuidarButton("Confirmar dose", modifier = Modifier.weight(1f), height = 48.dp, icon = "check", onClick = onDose)
-                        CuidarButton("", modifier = Modifier.width(48.dp), style = CuidarButtonStyle.Soft, height = 48.dp, icon = "clock", onClick = onDose)
+                        CuidarButton(
+                            text = if (doseStatus == DemoDoseStatus.Taken) "Dose registrada" else "Confirmar dose",
+                            modifier = Modifier.weight(1f),
+                            style = if (doseStatus == DemoDoseStatus.Taken) CuidarButtonStyle.Sage else CuidarButtonStyle.Primary,
+                            height = 48.dp,
+                            icon = if (doseStatus == DemoDoseStatus.Taken) "check" else "check",
+                            onClick = if (doseStatus == DemoDoseStatus.Taken) null else onDose,
+                        )
+                        CuidarButton("", modifier = Modifier.width(48.dp), style = CuidarButtonStyle.Soft, height = 48.dp, icon = "clock", onClick = if (doseStatus == DemoDoseStatus.Taken) null else onDose)
                     }
                 }
             }
@@ -152,12 +174,15 @@ fun DashboardScreen(
             CuidarCard(padding = 0.dp, radius = 20.dp) {
                 Column {
                     listOf(
-                        "14:00" to "Soneca curta",
-                        "14:30" to "Atenolol",
-                        "16:00" to "Lanche da tarde",
-                        "17:00" to "Ligar para o Pedro",
+                        Triple("nap", "14:00", "Soneca curta"),
+                        Triple("atenolol", "14:30", "Atenolol"),
+                        Triple("snack", "16:00", "Lanche da tarde"),
+                        Triple("callPedro", "17:00", "Ligar para o Pedro"),
                     ).forEachIndexed { index, item ->
-                        PendingTask(item.first, item.second, late = index == 1, last = index == 3)
+                        val done = item.first in doneTasks || (item.first == "atenolol" && doseStatus == DemoDoseStatus.Taken)
+                        PendingTask(item.second, item.third, done, late = item.first == "atenolol" && doseStatus == DemoDoseStatus.Pending, last = index == 3) {
+                            onToggleTask(item.first)
+                        }
                     }
                 }
             }
@@ -208,10 +233,10 @@ private fun QuickMetric(icon: String, value: String, label: String, tone: Cuidar
 }
 
 @Composable
-private fun PendingTask(time: String, title: String, late: Boolean, last: Boolean) {
+private fun PendingTask(time: String, title: String, done: Boolean, late: Boolean, last: Boolean, onToggle: () -> Unit) {
     val p = LocalCuidarPalette.current
     Row(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 12.dp),
+        modifier = Modifier.fillMaxWidth().clickable(onClick = onToggle).padding(horizontal = 14.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -219,11 +244,12 @@ private fun PendingTask(time: String, title: String, late: Boolean, last: Boolea
             Modifier
                 .size(22.dp)
                 .clip(RoundedCornerShape(7.dp))
-                .background(if (late) p.amberTint else Color.Transparent)
-                .border(1.5.dp, if (late) p.amber else p.line, RoundedCornerShape(7.dp)),
-        )
+                .background(if (done) p.sageTint else if (late) p.amberTint else Color.Transparent)
+                .border(1.5.dp, if (done) p.sage else if (late) p.amber else p.line, RoundedCornerShape(7.dp)),
+            contentAlignment = Alignment.Center,
+        ) { if (done) CuidarIcon("check", size = 14.dp, tint = p.sage) }
         Column(Modifier.weight(1f)) {
-            CText(title, size = 14.sp, weight = FontWeight.SemiBold)
+            CText(title, size = 14.sp, weight = FontWeight.SemiBold, decoration = if (done) TextDecoration.LineThrough else TextDecoration.None)
             CText("$time · ${if (title == "Atenolol") "remédio" else "rotina"}", size = 11.5.sp, color = p.textSoft)
         }
         if (late) CuidarBadge("atrasado", tone = CuidarTone.Amber, dot = true, small = true)
@@ -232,6 +258,7 @@ private fun PendingTask(time: String, title: String, late: Boolean, last: Boolea
 }
 
 private data class RoutineItem(
+    val id: String,
     val time: String,
     val title: String,
     val tag: String,
@@ -242,25 +269,30 @@ private data class RoutineItem(
 )
 
 private val routineItems = listOf(
-    RoutineItem("07:30", "Acordar e medir pressão", "saúde", CuidarTone.Sage, done = true),
-    RoutineItem("08:00", "Café da manhã + remédios", "refeição", CuidarTone.Gold, done = true),
-    RoutineItem("09:30", "Alongamento leve (15 min)", "movimento", CuidarTone.Sky, done = true),
-    RoutineItem("11:00", "Caminhada no quarteirão", "movimento", CuidarTone.Sky, done = true),
-    RoutineItem("12:00", "Almoço + Vitamina D", "refeição", CuidarTone.Gold, done = true),
-    RoutineItem("14:00", "Soneca curta", "descanso", CuidarTone.Primary, current = true),
-    RoutineItem("14:30", "Atenolol", "remédio", CuidarTone.Amber, alert = true),
-    RoutineItem("16:00", "Lanche da tarde", "refeição", CuidarTone.Gold),
-    RoutineItem("17:00", "Ligar para o Pedro", "social", CuidarTone.Primary),
-    RoutineItem("19:30", "Jantar leve", "refeição", CuidarTone.Gold),
-    RoutineItem("20:00", "Glifage XR", "remédio", CuidarTone.Amber),
-    RoutineItem("21:30", "Banho morno", "higiene", CuidarTone.Sage),
-    RoutineItem("22:00", "Donepezila + dormir", "remédio", CuidarTone.Amber),
+    RoutineItem("wake", "07:30", "Acordar e medir pressão", "saúde", CuidarTone.Sage, done = true),
+    RoutineItem("breakfast", "08:00", "Café da manhã + remédios", "refeição", CuidarTone.Gold, done = true),
+    RoutineItem("stretch", "09:30", "Alongamento leve (15 min)", "movimento", CuidarTone.Sky, done = true),
+    RoutineItem("walk", "11:00", "Caminhada no quarteirão", "movimento", CuidarTone.Sky, done = true),
+    RoutineItem("lunch", "12:00", "Almoço + Vitamina D", "refeição", CuidarTone.Gold, done = true),
+    RoutineItem("nap", "14:00", "Soneca curta", "descanso", CuidarTone.Primary, current = true),
+    RoutineItem("atenolol", "14:30", "Atenolol", "remédio", CuidarTone.Amber, alert = true),
+    RoutineItem("snack", "16:00", "Lanche da tarde", "refeição", CuidarTone.Gold),
+    RoutineItem("callPedro", "17:00", "Ligar para o Pedro", "social", CuidarTone.Primary),
+    RoutineItem("dinner", "19:30", "Jantar leve", "refeição", CuidarTone.Gold),
+    RoutineItem("glifage", "20:00", "Glifage XR", "remédio", CuidarTone.Amber),
+    RoutineItem("bath", "21:30", "Banho morno", "higiene", CuidarTone.Sage),
+    RoutineItem("donepezila", "22:00", "Donepezila + dormir", "remédio", CuidarTone.Amber),
 )
 
 @Composable
-fun RoutineScreen(onMedication: () -> Unit) {
+fun RoutineScreen(
+    onMedication: () -> Unit,
+    completedRoutine: Set<String>,
+    onToggleRoutine: (String) -> Unit,
+) {
     val p = LocalCuidarPalette.current
-    val doneCount = routineItems.count { it.done }
+    val dayItems = routineItems.map { it.copy(done = it.id in completedRoutine) }
+    val doneCount = dayItems.count { it.done }
     ScreenColumn {
         ScreenGutter(top = 4, bottom = 14) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -293,8 +325,11 @@ fun RoutineScreen(onMedication: () -> Unit) {
             Box {
                 Box(Modifier.padding(start = 72.dp, top = 14.dp, bottom = 14.dp).width(2.dp).fillMaxWidth().background(p.lineSoft))
                 Column {
-                    routineItems.forEach { item ->
-                        RoutineTimelineRow(item = item, onClick = if (item.tag == "remédio") onMedication else null)
+                    dayItems.forEach { item ->
+                        RoutineTimelineRow(
+                            item = item,
+                            onClick = if (item.tag == "remédio" && !item.done) onMedication else { { onToggleRoutine(item.id) } },
+                        )
                     }
                 }
             }

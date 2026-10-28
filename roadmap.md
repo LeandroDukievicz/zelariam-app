@@ -1,8 +1,9 @@
 # Roadmap — Cuidar+ / Zelariam
 
 **Atualizado em:** 27 de outubro de 2026  
-**Estado atual:** fundação Android e port das 15 telas em Kotlin/Jetpack Compose concluídos; build debug aprovado. Interações locais demonstrativas iniciadas.  
-**Próxima entrega:** finalizar estado compartilhado em memória para rotina, doses e ocorrências, sem persistência.
+**Estado atual:** fundação Android, port das 15 telas e interações locais demonstrativas concluídos; build debug aprovado.
+
+**Próxima entrega:** revisão visual em emulador/dispositivo e decisões pendentes do produto.
 
 ## Levantamento do ponto de partida
 
@@ -78,15 +79,17 @@ A organização em fases, bloqueios, critérios de saída e separação entre di
 
 ## Fase 3 — Interações locais de demonstração
 
-**Estado:** em andamento após o port do front-end; não depende de conta ou serviço.
+**Estado:** concluída para demonstração local; não depende de conta ou serviço.
 
-- [ ] Criar um único estado demonstrativo em memória para rotina, doses e ocorrências.
-- [ ] Permitir marcar/desmarcar tarefa e registrar, adiar ou corrigir uma dose fictícia.
-- [ ] Permitir criar, filtrar e desfazer ocorrência demonstrativa.
-- [ ] Refletir os estados em Hoje, rotina, medicamentos, alertas e modos especiais.
-- [ ] Indicar que alterações só duram na sessão e reiniciam ao reabrir/recarregar.
+- [x] Criar um único estado demonstrativo em memória para rotina, doses e ocorrências.
+- [x] Permitir marcar/desmarcar tarefa e registrar, adiar ou corrigir uma dose fictícia.
+- [x] Permitir criar, filtrar e desfazer ocorrência demonstrativa.
+- [x] Refletir estados de rotina/dose em Hoje, rotina, medicamentos, alertas e modos especiais.
+- [x] Indicar por confirmação temporária que as alterações só duram na sessão e reiniciam ao reabrir.
 
 **Critério de saída:** as ações simuladas têm resultado visual coerente e continuam claramente separadas de registro real de saúde.
+
+**Evidência atual:** `CareDemoState` fica em memória durante a sessão; confirmar, adiar, marcar como não tomada ou corrigir dose altera as telas relacionadas. A lista de ocorrências aceita novos exemplos, filtros por categoria e desfaz a última adição. Snackbar informa que cada mudança existe apenas na sessão. `./gradlew :app:assembleDebug --no-daemon` concluiu com `BUILD SUCCESSFUL`; não havia dispositivo/emulador ADB conectado para inspeção visual.
 
 ## Fase 4 — Preparação técnica para decisões futuras
 

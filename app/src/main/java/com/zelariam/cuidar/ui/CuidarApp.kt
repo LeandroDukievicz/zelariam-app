@@ -4,12 +4,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import kotlinx.coroutines.launch
 import com.zelariam.cuidar.ui.components.CuidarBottomBar
 import com.zelariam.cuidar.ui.screens.AlertsScreen
 import com.zelariam.cuidar.ui.screens.AgendaScreen
@@ -28,6 +33,8 @@ import com.zelariam.cuidar.ui.screens.RoutineScreen
 import com.zelariam.cuidar.ui.screens.VitalsScreen
 import com.zelariam.cuidar.ui.theme.CuidarTheme
 import com.zelariam.cuidar.ui.theme.LocalCuidarPalette
+import com.zelariam.cuidar.ui.state.CareDemoState
+import com.zelariam.cuidar.ui.state.DemoDoseStatus
 
 object CuidarRoute {
     const val Onboarding = "onboarding"
@@ -50,6 +57,12 @@ object CuidarRoute {
 @Composable
 fun CuidarApp() {
     val navController = rememberNavController()
+    val demoState = remember { CareDemoState() }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+    fun announceDemoChange(message: String) {
+        coroutineScope.launch { snackbarHostState.showSnackbar("$message · alteração só nesta sessão") }
+    }
     val backStackEntry by navController.currentBackStackEntryAsState()
     val route = backStackEntry?.destination?.route ?: CuidarRoute.Onboarding
     val palette = LocalCuidarPalette.current
@@ -62,6 +75,7 @@ fun CuidarApp() {
 
     Scaffold(
         containerColor = palette.background,
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         bottomBar = {
             if (showBottomBar) {
                 CuidarBottomBar(activeRoute = route) { destination ->
@@ -96,25 +110,71 @@ fun CuidarApp() {
                     onAgenda = { navController.navigate(CuidarRoute.Agenda) },
                     onAlerts = { navController.navigate(CuidarRoute.Alerts) },
                     onElderMode = { navController.navigate(CuidarRoute.ElderMode) },
+                    doneTasks = demoState.completedRoutine,
+                    doseStatus = demoState.doseStatus,
+                    onToggleTask = {
+                        demoState.toggleRoutine(it)
+                        announceDemoChange("Rotina atualizada")
+                    },
                 )
             }
             composable(CuidarRoute.Routine) {
-                RoutineScreen(onMedication = { navController.navigate(CuidarRoute.Dose) })
+                RoutineScreen(
+                    onMedication = { navController.navigate(CuidarRoute.Dose) },
+                    completedRoutine = demoState.completedRoutine,
+                    onToggleRoutine = {
+                        demoState.toggleRoutine(it)
+                        announceDemoChange("Rotina atualizada")
+                    },
+                )
             }
             composable(CuidarRoute.Medications) {
                 MedicationsScreen(
                     onDose = { navController.navigate(CuidarRoute.Dose) },
                     onIncidents = { navController.navigate(CuidarRoute.Incidents) },
                     onVitals = { navController.navigate(CuidarRoute.Vitals) },
+                    doseStatus = demoState.doseStatus,
                 )
             }
             composable(CuidarRoute.Dose) {
-                DoseScreen(onClose = { navController.popBackStack() })
+                DoseScreen(
+                    status = demoState.doseStatus,
+                    onClose = { navController.popBackStack() },
+                    onConfirm = {
+                        demoState.recordDose(DemoDoseStatus.Taken)
+                        announceDemoChange("Dose confirmada")
+                        navController.popBackStack()
+                    },
+                    onSnooze = {
+                        demoState.recordDose(DemoDoseStatus.Snoozed)
+                        announceDemoChange("Dose adiada por 30 minutos")
+                        navController.popBackStack()
+                    },
+                    onNotTaken = {
+                        demoState.recordDose(DemoDoseStatus.NotTaken)
+                        announceDemoChange("Dose marcada como não tomada")
+                        navController.popBackStack()
+                    },
+                    onCorrect = {
+                        demoState.recordDose(DemoDoseStatus.Pending)
+                        announceDemoChange("Registro de dose reaberto para correção")
+                    },
+                )
             }
             composable(CuidarRoute.Incidents) {
                 IncidentsScreen(
                     onMedications = { navController.navigate(CuidarRoute.Medications) },
                     onVitals = { navController.navigate(CuidarRoute.Vitals) },
+                    occurrences = demoState.occurrences,
+                    canUndoLastOccurrence = demoState.canUndoLastOccurrence,
+                    onAddOccurrence = { title, body, tag ->
+                        demoState.addOccurrence(title, body, tag)
+                        announceDemoChange("Ocorrência demonstrativa adicionada")
+                    },
+                    onUndoLastOccurrence = {
+                        demoState.undoLastOccurrence()
+                        announceDemoChange("Adição desfeita")
+                    },
                 )
             }
             composable(CuidarRoute.Vitals) {
@@ -141,6 +201,7 @@ fun CuidarApp() {
                     onReport = { navController.navigate(CuidarRoute.Report) },
                     onCaregivers = { navController.navigate(CuidarRoute.Caregivers) },
                     onFamily = { navController.navigate(CuidarRoute.Family) },
+                    doseStatus = demoState.doseStatus,
                 )
             }
             composable(CuidarRoute.Report) {
@@ -150,12 +211,14 @@ fun CuidarApp() {
                 CaregiverModeScreen(
                     onDose = { navController.navigate(CuidarRoute.Dose) },
                     onFamily = { navController.navigate(CuidarRoute.Family) },
+                    doseStatus = demoState.doseStatus,
                 )
             }
             composable(CuidarRoute.ElderMode) {
                 ElderModeScreen(
                     onDose = { navController.navigate(CuidarRoute.Dose) },
                     onHelp = { navController.navigate(CuidarRoute.Alerts) },
+                    doseStatus = demoState.doseStatus,
                 )
             }
         }

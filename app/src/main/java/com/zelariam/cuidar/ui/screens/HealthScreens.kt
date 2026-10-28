@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -46,6 +51,11 @@ import com.zelariam.cuidar.ui.components.CuidarTone
 import com.zelariam.cuidar.ui.components.ScreenColumn
 import com.zelariam.cuidar.ui.components.ScreenGutter
 import com.zelariam.cuidar.ui.theme.LocalCuidarPalette
+import com.zelariam.cuidar.ui.state.DemoDoseStatus
+import com.zelariam.cuidar.ui.state.DemoOccurrence
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 
 private data class MedicationDemo(
     val name: String,
@@ -57,6 +67,7 @@ private data class MedicationDemo(
     val takenAt: String = "",
     val byWhom: String = "",
     val next: Boolean = false,
+    val statusText: String? = null,
 )
 
 private val medicationDemo = listOf(
@@ -73,6 +84,7 @@ fun MedicationsScreen(
     onDose: () -> Unit,
     onIncidents: () -> Unit,
     onVitals: () -> Unit,
+    doseStatus: DemoDoseStatus,
 ) {
     val p = LocalCuidarPalette.current
     ScreenColumn {
@@ -102,7 +114,26 @@ fun MedicationsScreen(
                     CuidarCard(padding = 0.dp, radius = 18.dp) {
                         Column {
                             items.forEachIndexed { index, med ->
-                                MedicationRow(med, last = index == items.lastIndex, onDose = onDose)
+                                val shownMedication = if (med.name == "Atenolol") {
+                                    med.copy(
+                                        taken = doseStatus == DemoDoseStatus.Taken,
+                                        next = doseStatus != DemoDoseStatus.Taken,
+                                        takenAt = when (doseStatus) {
+                                            DemoDoseStatus.Taken -> "14:48"
+                                            DemoDoseStatus.Snoozed -> "Adiada até 15:18"
+                                            DemoDoseStatus.NotTaken -> "Não tomada nesta sessão"
+                                            DemoDoseStatus.Pending -> ""
+                                        },
+                                        byWhom = "Marina",
+                                        statusText = when (doseStatus) {
+                                            DemoDoseStatus.Pending -> null
+                                            DemoDoseStatus.Taken -> null
+                                            DemoDoseStatus.Snoozed -> "Adiada até 15:18 nesta sessão"
+                                            DemoDoseStatus.NotTaken -> "Não tomada nesta sessão"
+                                        },
+                                    )
+                                } else med
+                                MedicationRow(shownMedication, last = index == items.lastIndex, onDose = onDose)
                             }
                         }
                     }
@@ -170,7 +201,7 @@ private fun MedicationRow(med: MedicationDemo, last: Boolean, onDose: () -> Unit
         Column(Modifier.weight(1f)) {
             CText("${med.name} · ${med.dose}", size = 14.5.sp, weight = FontWeight.SemiBold)
             CText(
-                if (med.taken) "✓ ${med.takenAt} · por ${med.byWhom}" else med.form,
+                if (med.taken) "✓ ${med.takenAt} · por ${med.byWhom}" else med.statusText ?: med.form,
                 size = 12.sp,
                 color = p.textSoft,
                 modifier = Modifier.padding(top = 1.dp),
@@ -186,7 +217,14 @@ private fun MedicationRow(med: MedicationDemo, last: Boolean, onDose: () -> Unit
 }
 
 @Composable
-fun DoseScreen(onClose: () -> Unit) {
+fun DoseScreen(
+    status: DemoDoseStatus,
+    onClose: () -> Unit,
+    onConfirm: () -> Unit,
+    onSnooze: () -> Unit,
+    onNotTaken: () -> Unit,
+    onCorrect: () -> Unit,
+) {
     val p = LocalCuidarPalette.current
     Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = .32f))) {
         Column(Modifier.align(Alignment.TopCenter).fillMaxWidth().padding(20.dp).alpha(.3f)) {
@@ -216,23 +254,39 @@ fun DoseScreen(onClose: () -> Unit) {
                     CuidarIcon("pill", size = 32.dp, tint = p.amber)
                 }
                 Column(Modifier.weight(1f)) {
-                    CuidarBadge("Próxima dose", tone = CuidarTone.Amber, dot = true, small = true)
+                    CuidarBadge(
+                        text = when (status) {
+                            DemoDoseStatus.Pending -> "Próxima dose"
+                            DemoDoseStatus.Taken -> "Dose registrada"
+                            DemoDoseStatus.Snoozed -> "Adiada 30 min"
+                            DemoDoseStatus.NotTaken -> "Não tomada"
+                        },
+                        tone = if (status == DemoDoseStatus.Taken) CuidarTone.Sage else CuidarTone.Amber,
+                        dot = true,
+                        small = true,
+                    )
                     CText("Atenolol · 25 mg", size = 20.sp, weight = FontWeight.Bold, modifier = Modifier.padding(top = 5.dp))
                     CText("1 comprimido · 14:30", size = 13.sp, color = p.textSoft)
                 }
             }
             Spacer(Modifier.height(18.dp))
-            CuidarButton("Confirmar dose", modifier = Modifier.fillMaxWidth(), height = 64.dp, icon = "check", onClick = onClose)
+            CuidarButton(
+                text = if (status == DemoDoseStatus.Taken) "Corrigir registro" else "Confirmar dose",
+                modifier = Modifier.fillMaxWidth(),
+                height = 64.dp,
+                icon = if (status == DemoDoseStatus.Taken) "note" else "check",
+                onClick = if (status == DemoDoseStatus.Taken) onCorrect else onConfirm,
+            )
             Spacer(Modifier.height(12.dp))
-            DoseDetail("clock", "Horário", "Agora · 14:48", trailing = "Ajustar")
+            DoseDetail("clock", "Horário", if (status == DemoDoseStatus.Snoozed) "Adiada até 15:18" else "Agora · 14:48", trailing = "Ajustar")
             Spacer(Modifier.height(10.dp))
             DoseDetail("user", "Quem deu", "Roseli Santos")
             Spacer(Modifier.height(10.dp))
             DoseDetail("note", "Observação (opcional)", "Ex: \"Tomou com suco de laranja.\"", italic = true)
             Spacer(Modifier.height(14.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                CuidarButton("Adiar 30 min", modifier = Modifier.weight(1f), style = CuidarButtonStyle.Ghost, height = 48.dp, onClick = onClose)
-                CuidarButton("Não tomou", modifier = Modifier.weight(1f), style = CuidarButtonStyle.Ghost, height = 48.dp, onClick = onClose)
+            if (status != DemoDoseStatus.Taken) Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                CuidarButton("Adiar 30 min", modifier = Modifier.weight(1f), style = CuidarButtonStyle.Ghost, height = 48.dp, onClick = onSnooze)
+                CuidarButton("Não tomou", modifier = Modifier.weight(1f), style = CuidarButtonStyle.Ghost, height = 48.dp, onClick = onNotTaken)
             }
         }
     }
@@ -255,44 +309,51 @@ private fun DoseDetail(icon: String, label: String, value: String, trailing: Str
     }
 }
 
-private data class OccurrenceDemo(
-    val whenText: String,
-    val who: String,
-    val initials: String,
-    val tag: String,
-    val tone: CuidarTone,
-    val title: String,
-    val body: String,
-)
-
-private val occurrenceDemos = listOf(
-    OccurrenceDemo("hoje · 13:42", "Roseli", "RS", "humor", CuidarTone.Sage, "Almoçou bem e está animada", "Aceitou todo o prato e pediu para ligar para a Marina depois."),
-    OccurrenceDemo("hoje · 11:15", "Roseli", "RS", "movimento", CuidarTone.Sky, "Caminhou 12 min no quarteirão", "Reclamou um pouco do joelho direito perto do fim, mas voltou bem."),
-    OccurrenceDemo("ontem · 22:40", "Vanderlei", "VL", "sono", CuidarTone.Gold, "Demorou a pegar no sono", "Ficou inquieta até umas 23h30. Tomou um chá de camomila."),
-    OccurrenceDemo("ontem · 16:08", "Roseli", "RS", "queda leve", CuidarTone.Amber, "Tropeçou no tapete da sala", "Sem batida na cabeça. Examinei o tornozelo, sem inchaço. Recolhi o tapete."),
-    OccurrenceDemo("2 dias · 09:20", "Marina", "MA", "consulta", CuidarTone.Primary, "Cardio — Dr. Henrique", "Trocou Captopril por Atenolol 25mg. Próximo retorno em 60 dias."),
-)
-
 @Composable
 fun IncidentsScreen(
     onMedications: () -> Unit,
     onVitals: () -> Unit,
+    occurrences: List<DemoOccurrence>,
+    canUndoLastOccurrence: Boolean,
+    onAddOccurrence: (String, String, String) -> Unit,
+    onUndoLastOccurrence: () -> Unit,
 ) {
     val p = LocalCuidarPalette.current
+    var selectedFilter by remember { mutableStateOf("Todas") }
+    var showAddDialog by remember { mutableStateOf(false) }
+    val filterTags = mapOf(
+        "Quedas" to setOf("queda", "queda leve"),
+        "Humor" to setOf("humor"),
+        "Sono" to setOf("sono"),
+        "Alimentação" to setOf("alimentação"),
+        "Dor" to setOf("dor"),
+    )
+    val shownOccurrences = if (selectedFilter == "Todas") occurrences else {
+        occurrences.filter { it.tag in filterTags[selectedFilter].orEmpty() }
+    }
     ScreenColumn {
         ScreenGutter(top = 4, bottom = 12) {
-            CuidarPageTitle("Ocorrências", eyebrow = "Saúde · Cecília", trailing = { CuidarIconButton("plus", filled = true) })
+            CuidarPageTitle("Ocorrências", eyebrow = "Saúde · Cecília", trailing = { CuidarIconButton("plus", filled = true, onClick = { showAddDialog = true }) })
             Spacer(Modifier.height(12.dp))
             HealthTabs(active = "Ocorrências", onMedication = onMedications, onVitals = onVitals, onIncidents = {})
             Spacer(Modifier.height(14.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                listOf("Todas", "Quedas", "Humor", "Sono", "Alimentação", "Dor").forEachIndexed { index, label ->
-                    CuidarBadge(label, tone = if (index == 0) CuidarTone.Primary else CuidarTone.Neutral, small = true)
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.horizontalScroll(rememberScrollState())) {
+                listOf("Todas", "Quedas", "Humor", "Sono", "Alimentação", "Dor").forEach { label ->
+                    FilterChip(label, selected = selectedFilter == label, onClick = { selectedFilter = label })
                 }
             }
         }
 
-        occurrenceDemos.forEach { event ->
+        if (canUndoLastOccurrence) ScreenGutter(bottom = 12) {
+            CuidarCard(padding = 12.dp, radius = 14.dp, color = p.primaryTint) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+                    CText("Ocorrência demonstrativa adicionada", size = 12.5.sp, weight = FontWeight.SemiBold)
+                    CuidarButton("Desfazer", style = CuidarButtonStyle.Ghost, height = 36.dp, onClick = onUndoLastOccurrence)
+                }
+            }
+        }
+
+        shownOccurrences.forEach { event ->
             ScreenGutter(bottom = 10) {
                 CuidarCard(padding = 14.dp, radius = 18.dp) {
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.Top) {
@@ -322,6 +383,12 @@ fun IncidentsScreen(
             }
         }
 
+        if (shownOccurrences.isEmpty()) ScreenGutter(bottom = 16) {
+            CuidarCard(padding = 18.dp, radius = 18.dp, color = p.backgroundSoft) {
+                CText("Nenhuma ocorrência nesta categoria.", size = 13.sp, color = p.textSoft)
+            }
+        }
+
         ScreenGutter(bottom = 24) {
             CuidarCard(padding = 14.dp, radius = 18.dp, color = p.backgroundSoft, border = p.line) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -337,6 +404,56 @@ fun IncidentsScreen(
             }
         }
     }
+
+    if (showAddDialog) AddOccurrenceDialog(
+        onDismiss = { showAddDialog = false },
+        onSave = { title, body, tag ->
+            onAddOccurrence(title, body, tag)
+            showAddDialog = false
+        },
+    )
+}
+
+@Composable
+private fun FilterChip(label: String, selected: Boolean, onClick: () -> Unit) {
+    val p = LocalCuidarPalette.current
+    Box(
+        Modifier.clip(CircleShape)
+            .background(if (selected) p.primary else p.card)
+            .then(if (selected) Modifier else Modifier.border(1.dp, p.lineSoft, CircleShape))
+            .clickable(onClick = onClick)
+            .padding(horizontal = 12.dp, vertical = 7.dp),
+    ) {
+        CText(label, size = 11.5.sp, weight = FontWeight.SemiBold, color = if (selected) Color.White else p.textSoft)
+    }
+}
+
+@Composable
+private fun AddOccurrenceDialog(onDismiss: () -> Unit, onSave: (String, String, String) -> Unit) {
+    val p = LocalCuidarPalette.current
+    var title by remember { mutableStateOf("") }
+    var body by remember { mutableStateOf("") }
+    var category by remember { mutableStateOf("humor") }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Nova ocorrência demonstrativa") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text("Este registro fica apenas nesta sessão de demonstração.", color = p.textSoft)
+                OutlinedTextField(value = title, onValueChange = { title = it }, label = { Text("O que aconteceu?") }, singleLine = true)
+                OutlinedTextField(value = body, onValueChange = { body = it }, label = { Text("Detalhes") }, minLines = 2)
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.horizontalScroll(rememberScrollState())) {
+                    listOf("humor", "movimento", "sono", "alimentação", "dor", "queda").forEach { option ->
+                        FilterChip(option.replaceFirstChar { it.uppercase() }, category == option) { category = option }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            CuidarButton("Adicionar", height = 40.dp, onClick = if (title.isBlank()) null else ({ onSave(title, body, category) }))
+        },
+        dismissButton = { CuidarButton("Cancelar", style = CuidarButtonStyle.Ghost, height = 40.dp, onClick = onDismiss) },
+    )
 }
 
 @Composable

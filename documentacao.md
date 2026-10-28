@@ -71,6 +71,15 @@ Este arquivo registra o que foi decidido, quem decidiu e o que ainda aguarda esc
 - **Origem:** decisão técnica para atender ao port nativo solicitado sem backend.
 - **Estado:** implementado; confirmação visual final depende de rodar em emulador ou aparelho.
 
+### T-006 — Interações locais de demonstração
+
+- **Data:** 27/10/2026
+- **Decisão técnica de implementação:** manter um `CareDemoState` compartilhado em memória para tarefas da rotina, estado demonstrativo da dose de Atenolol e ocorrências. Permitir criar, filtrar por categoria e desfazer a última ocorrência adicionada.
+- **Origem:** fase 3 do roadmap, autorizada pelo proprietário após a implementação da UI.
+- **Limites:** não há persistência local, chamadas de rede ou integração. Os exemplos do wireframe continuam sendo fictícios. A confirmação temporária informa que as mudanças valem somente durante a sessão.
+- **Reflexos visuais:** Hoje, rotina, lista de medicamentos, alertas e modos cuidador/idoso refletem o estado compartilhado da dose e das tarefas.
+- **Verificação:** `./gradlew :app:assembleDebug --no-daemon` concluiu com `BUILD SUCCESSFUL` em 27/10/2026.
+
 ## Questões pendentes do proprietário
 
 ### P-001 — Nome definitivo

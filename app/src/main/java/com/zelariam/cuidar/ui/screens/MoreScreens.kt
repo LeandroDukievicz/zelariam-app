@@ -33,6 +33,7 @@ import com.zelariam.cuidar.ui.components.CuidarTone
 import com.zelariam.cuidar.ui.components.ScreenColumn
 import com.zelariam.cuidar.ui.components.ScreenGutter
 import com.zelariam.cuidar.ui.theme.LocalCuidarPalette
+import com.zelariam.cuidar.ui.state.DemoDoseStatus
 
 private data class AlertDemo(
     val tone: CuidarTone,
@@ -58,8 +59,35 @@ fun AlertsScreen(
     onReport: () -> Unit,
     onCaregivers: () -> Unit,
     onFamily: () -> Unit,
+    doseStatus: DemoDoseStatus,
 ) {
     val p = LocalCuidarPalette.current
+    val doseAlert = when (doseStatus) {
+        DemoDoseStatus.Pending -> alertDemos.first()
+        DemoDoseStatus.Taken -> alertDemos.first().copy(
+            time = "14:48",
+            title = "Atenolol confirmado",
+            body = "Dose demonstrativa registrada por Marina nesta sessão.",
+            action = "Ver registro",
+            urgency = "aviso",
+        )
+        DemoDoseStatus.Snoozed -> alertDemos.first().copy(
+            time = "14:48",
+            title = "Atenolol adiado por 30 min",
+            body = "A dose demonstrativa foi adiada até 15:18.",
+            action = "Registrar",
+            urgency = "atenção",
+        )
+        DemoDoseStatus.NotTaken -> alertDemos.first().copy(
+            time = "14:48",
+            title = "Atenolol marcado como não tomado",
+            body = "Este estado é fictício e pode ser corrigido nesta sessão.",
+            action = "Corrigir",
+            urgency = "aviso",
+        )
+    }
+    val visibleAlerts = listOf(doseAlert) + alertDemos.drop(1)
+    val pendingCount = if (doseStatus == DemoDoseStatus.Pending || doseStatus == DemoDoseStatus.Snoozed) "2" else "1"
     ScreenColumn {
         ScreenGutter(top = 4, bottom = 14) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -72,7 +100,7 @@ fun AlertsScreen(
             Spacer(Modifier.height(14.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 SummaryCard("Hoje", "5", CuidarTone.Primary, Modifier.weight(1f))
-                SummaryCard("Pendentes", "2", CuidarTone.Amber, Modifier.weight(1f))
+                SummaryCard("Pendentes", pendingCount, CuidarTone.Amber, Modifier.weight(1f))
                 SummaryCard("Críticos", "1", CuidarTone.Coral, Modifier.weight(1f))
             }
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.padding(top = 14.dp)) {
@@ -82,7 +110,7 @@ fun AlertsScreen(
             }
         }
 
-        alertDemos.forEach { alert ->
+        visibleAlerts.forEach { alert ->
             val destination = when (alert.destination) {
                 "dose" -> onDose
                 "cuidadores" -> onCaregivers
