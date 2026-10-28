@@ -1,0 +1,126 @@
+---
+---
+<footer id="footer">
+	<div class="container footer-content">
+		<div class="footer-brand">
+			<div class="logo">
+				<span class="logo-plus">+</span>
+				<span class="logo-text">Zelariam</span>
+			</div>
+			<p>Transformando o cuidado familiar em um momento de calma e conexão.</p>
+		</div>
+		<div class="footer-links">
+			<div class="link-group">
+				<h4>Produto</h4>
+				<a href="#showcase">O app</a>
+				<a href="#features">Recursos</a>
+				<a href="#care">Modos de uso</a>
+			</div>
+			<div class="link-group">
+				<h4>Cuidado</h4>
+				<a href="#features">Medicamentos</a>
+				<a href="#features">Rotina</a>
+				<a href="#features">Sinais vitais</a>
+			</div>
+			<div class="link-group">
+				<h4>Contato</h4>
+				<a href="mailto:contato@zelariam.com">contato@zelariam.com</a>
+				<a href="#cta">Acesso antecipado</a>
+			</div>
+		</div>
+	</div>
+	<div class="container footer-bottom">
+		<p>&copy; 2026 Zelariam. Todos os direitos reservados.</p>
+	</div>
+</footer>
+
+<style>
+	footer {
+		background: var(--bg-soft);
+		padding: 70px 0 36px;
+		border-top: 1px solid var(--line);
+	}
+
+	.footer-content {
+		display: flex;
+		justify-content: space-between;
+		gap: 60px;
+		margin-bottom: 60px;
+	}
+
+	.footer-brand {
+		max-width: 300px;
+	}
+
+	.logo {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		font-weight: 700;
+		font-size: 1.5rem;
+		margin-bottom: 20px;
+	}
+
+	.logo-plus {
+		background: var(--primary);
+		color: white;
+		width: 32px;
+		height: 32px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 8px;
+		font-family: "DM Serif Display", serif;
+		line-height: 1;
+	}
+
+	.footer-brand p {
+		color: var(--text-soft);
+		line-height: 1.5;
+	}
+
+	.footer-links {
+		display: flex;
+		gap: 80px;
+	}
+
+	h4 {
+		font-size: 1.1rem;
+		margin-bottom: 24px;
+		font-weight: 700;
+	}
+
+	.link-group {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.link-group a {
+		color: var(--text-soft);
+		font-size: 1rem;
+	}
+
+	.link-group a:hover {
+		color: var(--primary);
+	}
+
+	.footer-bottom {
+		padding-top: 40px;
+		border-top: 1px solid var(--line);
+		text-align: center;
+		color: var(--text-mute);
+		font-size: 0.9rem;
+	}
+
+	@media (max-width: 768px) {
+		.footer-content {
+			flex-direction: column;
+			gap: 40px;
+		}
+		.footer-links {
+			gap: 34px;
+			flex-wrap: wrap;
+		}
+	}
+</style>

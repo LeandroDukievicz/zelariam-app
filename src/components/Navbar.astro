@@ -1,0 +1,100 @@
+---
+---
+<nav>
+	<div class="container nav-content">
+		<a href="#" class="logo" aria-label="Zelariam">
+			<span class="logo-plus">+</span>
+			<span class="logo-text">Zelariam</span>
+		</a>
+		<div class="nav-links">
+			<a href="#showcase">O App</a>
+			<a href="#features">Recursos</a>
+			<a href="#care">Cuidado</a>
+			<a href="#footer">Contato</a>
+		</div>
+		<a href="#cta" class="btn-primary">Entrar na lista</a>
+	</div>
+</nav>
+
+<style>
+	nav {
+		height: 72px;
+		display: flex;
+		align-items: center;
+		position: sticky;
+		top: 0;
+		background: rgba(251, 246, 239, 0.88);
+		backdrop-filter: blur(14px);
+		z-index: 100;
+		border-bottom: 1px solid var(--line);
+	}
+
+	.nav-content {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
+	}
+
+	.logo {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		font-weight: 700;
+		font-size: 1.35rem;
+	}
+
+	.logo-plus {
+		background: linear-gradient(135deg, var(--primary), var(--primary-deep));
+		color: #FFFEF8;
+		width: 32px;
+		height: 32px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 8px;
+		font-family: "DM Serif Display", serif;
+		font-size: 1.4rem;
+		line-height: 1;
+	}
+
+	.nav-links {
+		display: flex;
+		gap: 32px;
+	}
+
+	.nav-links a {
+		font-weight: 500;
+		color: var(--text-soft);
+	}
+
+	.nav-links a:hover {
+		color: var(--primary);
+	}
+
+	.btn-primary {
+		background: var(--primary);
+		color: white;
+		padding: 11px 18px;
+		border-radius: 12px;
+		font-weight: 600;
+		font-size: 0.95rem;
+		box-shadow: var(--shadow);
+	}
+
+	.btn-primary:hover {
+		background: var(--primary-deep);
+		transform: translateY(-1px);
+	}
+
+	@media (max-width: 768px) {
+		.nav-links {
+			display: none;
+		}
+
+		.btn-primary {
+			padding: 10px 14px;
+			font-size: 0.88rem;
+		}
+	}
+</style>

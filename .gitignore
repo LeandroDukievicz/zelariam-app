@@ -1,3 +1,11 @@
+# Node / Astro landing page
+node_modules/
+dist/
+.astro/
+npm-debug.log*
+*.log
+
+# Android / Gradle
 .gradle/
 .idea/
 build/

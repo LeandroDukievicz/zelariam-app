@@ -1,0 +1,433 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Hero from '../components/Hero.astro';
+import Features from '../components/Features.astro';
+import Footer from '../components/Footer.astro';
+
+const showcase = [
+	{
+		image: '/screenshots/focus-hoje.png',
+		alt: 'Tela do Zelariam com resumo diário de cuidado',
+		title: 'Resumo do dia',
+		text: 'Pendências, confirmações e alertas aparecem em uma leitura rápida.'
+	},
+	{
+		image: '/screenshots/rotina.png',
+		alt: 'Tela de rotina do Zelariam',
+		title: 'Rotina detalhada',
+		text: 'A família acompanha o que já foi feito e o que ainda precisa de atenção.'
+	},
+	{
+		image: '/screenshots/02-dose-meds-modos.png',
+		alt: 'Tela de controle de medicamentos do Zelariam',
+		title: 'Medicamentos',
+		text: 'Cada dose pode ser conferida com horário, responsável e observações.'
+	}
+];
+---
+
+<Layout title="Zelariam | Cuidado familiar para idosos">
+	<Navbar />
+	<main>
+		<Hero />
+
+		<section class="lifestyle">
+			<div class="container lifestyle-grid">
+				<div class="lifestyle-copy">
+					<span class="section-kicker">Cuidado com presença</span>
+					<h2>Tecnologia para aproximar, não para complicar.</h2>
+					<p>O Zelariam foi pensado para entrar na rotina da casa com naturalidade: simples para quem recebe cuidado, claro para quem acompanha de perto e útil para quem precisa decidir rápido.</p>
+				</div>
+
+				<div class="lifestyle-photos" aria-label="Pessoas idosas usando celular">
+					<img class="photo-large" src="/images/family-phone-home.png" alt="Casal idoso feliz usando celular com um familiar" loading="lazy" />
+					<img class="photo-small" src="/images/elder-phone-home.png" alt="Mulher idosa sorrindo ao usar celular em casa" loading="lazy" />
+				</div>
+			</div>
+		</section>
+
+		<section id="showcase" class="showcase">
+			<div class="container">
+				<div class="split-heading">
+					<span class="section-kicker">Dentro do app</span>
+					<h2>Uma experiência feita para cuidado real, não para planilhas.</h2>
+					<p>As telas foram pensadas para reduzir dúvida, deixar o histórico acessível e ajudar cada pessoa da família a saber onde agir.</p>
+				</div>
+
+				<div class="showcase-grid">
+					{showcase.map((item) => (
+						<article class="showcase-item">
+							<img src={item.image} alt={item.alt} loading="lazy" />
+							<div class="item-caption">
+								<h3>{item.title}</h3>
+								<p>{item.text}</p>
+							</div>
+						</article>
+					))}
+				</div>
+			</div>
+		</section>
+
+		<Features />
+
+		<section id="care" class="care">
+			<div class="container care-grid">
+				<div class="care-copy">
+					<span class="section-kicker">Modos de uso</span>
+					<h2>Cada pessoa vê a interface certa para sua responsabilidade.</h2>
+					<p>O cuidador registra o trabalho do dia. A família acompanha decisões e histórico. O idoso pode usar uma versão mais simples, com ações grandes e foco no essencial.</p>
+					<ul>
+						<li>Modo cuidador para tarefas, doses e ocorrências.</li>
+						<li>Modo família para acompanhamento e tomada de decisão.</li>
+						<li>Modo idoso com navegação direta e linguagem acolhedora.</li>
+					</ul>
+				</div>
+
+				<div class="care-screens" aria-label="Telas dos modos do Zelariam">
+					<img class="care-phone main-phone" src="/screenshots/03-dose-meds-modos.png" alt="Tela de modos do Zelariam" loading="lazy" />
+					<img class="care-phone side-phone" src="/screenshots/onboarding.png" alt="Tela de boas-vindas do Zelariam" loading="lazy" />
+				</div>
+			</div>
+		</section>
+
+		<section id="cta" class="cta-final">
+			<div class="container cta-layout">
+				<div>
+					<span class="section-kicker">Acesso antecipado</span>
+					<h2>Prepare sua família para cuidar com mais clareza.</h2>
+				</div>
+				<div class="cta-actions">
+					<p>Entre na lista para receber novidades, acesso ao piloto e convites de teste do Zelariam.</p>
+					<a href="mailto:contato@zelariam.com?subject=Quero%20conhecer%20o%20Zelariam" class="btn-primary-lg">Quero conhecer</a>
+				</div>
+			</div>
+		</section>
+	</main>
+	<Footer />
+</Layout>
+
+<style>
+	.section-kicker {
+		display: block;
+		margin-bottom: 12px;
+		color: var(--primary-deep);
+		font-size: 0.82rem;
+		font-weight: 800;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.showcase {
+		background: var(--bg);
+	}
+
+	.lifestyle {
+		background: var(--bg-warm);
+		padding: 86px 0;
+		overflow: hidden;
+	}
+
+	.lifestyle-grid {
+		display: grid;
+		grid-template-columns: minmax(0, 0.72fr) minmax(420px, 1fr);
+		gap: 54px;
+		align-items: center;
+	}
+
+	.lifestyle-copy h2 {
+		margin-bottom: 20px;
+		font-size: clamp(2.2rem, 5vw, 3.6rem);
+		line-height: 1;
+	}
+
+	.lifestyle-copy p {
+		color: var(--text-soft);
+		font-size: 1.12rem;
+		line-height: 1.7;
+	}
+
+	.lifestyle-photos {
+		position: relative;
+		min-height: 520px;
+	}
+
+	.lifestyle-photos img {
+		position: absolute;
+		border: 10px solid white;
+		border-radius: 8px;
+		box-shadow: var(--shadow-lg);
+		object-fit: cover;
+	}
+
+	.photo-large {
+		right: 0;
+		top: 0;
+		width: min(88%, 650px);
+		aspect-ratio: 1.28;
+	}
+
+	.photo-small {
+		left: 0;
+		bottom: 0;
+		width: min(44%, 300px);
+		aspect-ratio: 0.78;
+	}
+
+	.split-heading {
+		display: grid;
+		grid-template-columns: minmax(0, 0.95fr) minmax(280px, 0.75fr);
+		gap: 40px;
+		align-items: end;
+		margin-bottom: 42px;
+	}
+
+	.split-heading .section-kicker {
+		grid-column: 1 / -1;
+		margin-bottom: -24px;
+	}
+
+	.split-heading h2,
+	.care-copy h2,
+	.cta-final h2 {
+		margin-bottom: 0;
+		font-size: clamp(2.2rem, 5vw, 3.6rem);
+		line-height: 1;
+	}
+
+	.split-heading p,
+	.care-copy p,
+	.cta-actions p {
+		color: var(--text-soft);
+		font-size: 1.08rem;
+		line-height: 1.65;
+	}
+
+	.showcase-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 20px;
+	}
+
+	.showcase-item {
+		overflow: hidden;
+		border: 1px solid var(--line);
+		border-radius: 8px;
+		background: white;
+		box-shadow: var(--shadow);
+	}
+
+	.showcase-item img {
+		width: 100%;
+		aspect-ratio: 0.72;
+		object-fit: cover;
+		object-position: center;
+		background: var(--bg-soft);
+	}
+
+	.item-caption {
+		padding: 24px;
+	}
+
+	.item-caption h3 {
+		margin-bottom: 8px;
+		font-family: "DM Sans", system-ui, sans-serif;
+		font-size: 1.08rem;
+		font-weight: 800;
+	}
+
+	.item-caption p {
+		margin-bottom: 0;
+		color: var(--text-soft);
+		line-height: 1.55;
+	}
+
+	.care {
+		background: var(--bg-soft);
+		overflow: hidden;
+	}
+
+	.care-grid {
+		display: grid;
+		grid-template-columns: minmax(0, 0.9fr) minmax(340px, 1fr);
+		gap: 64px;
+		align-items: center;
+	}
+
+	.care-copy p {
+		margin: 22px 0 24px;
+	}
+
+	.care-copy ul {
+		display: grid;
+		gap: 12px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.care-copy li {
+		position: relative;
+		padding-left: 26px;
+		color: var(--text);
+		font-weight: 700;
+		line-height: 1.45;
+	}
+
+	.care-copy li::before {
+		content: "";
+		position: absolute;
+		top: 0.58em;
+		left: 0;
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		background: var(--sage);
+	}
+
+	.care-screens {
+		position: relative;
+		min-height: 590px;
+	}
+
+	.care-phone {
+		position: absolute;
+		width: min(62%, 330px);
+		aspect-ratio: 9 / 16;
+		object-fit: cover;
+		object-position: center;
+		border: 10px solid white;
+		border-radius: 32px;
+		box-shadow: var(--shadow-lg);
+		background: white;
+	}
+
+	.main-phone {
+		right: 10%;
+		top: 0;
+		z-index: 2;
+	}
+
+	.side-phone {
+		left: 0;
+		bottom: 0;
+		transform: rotate(-4deg);
+	}
+
+	.cta-final {
+		background: var(--text);
+		color: white;
+		padding: 76px 0;
+	}
+
+	.cta-layout {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(280px, 0.62fr);
+		gap: 44px;
+		align-items: center;
+	}
+
+	.cta-final .section-kicker {
+		color: var(--gold);
+	}
+
+	.cta-actions p {
+		margin-bottom: 26px;
+		color: rgba(255, 255, 255, 0.76);
+	}
+
+	.btn-primary-lg {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 54px;
+		padding: 0 24px;
+		border-radius: 14px;
+		background: white;
+		color: var(--text);
+		font-weight: 800;
+		box-shadow: 0 16px 32px rgba(0, 0, 0, 0.18);
+	}
+
+	.btn-primary-lg:hover {
+		transform: translateY(-2px);
+	}
+
+	@media (max-width: 900px) {
+		.split-heading,
+		.lifestyle-grid,
+		.care-grid,
+		.cta-layout {
+			grid-template-columns: 1fr;
+		}
+
+		.lifestyle-grid {
+			gap: 34px;
+		}
+
+		.lifestyle-photos {
+			min-height: 480px;
+		}
+
+		.split-heading .section-kicker {
+			margin-bottom: -18px;
+		}
+
+		.showcase-grid {
+			grid-template-columns: 1fr;
+			max-width: 520px;
+			margin: 0 auto;
+		}
+
+		.care-grid {
+			gap: 36px;
+		}
+
+		.care-screens {
+			min-height: 470px;
+		}
+	}
+
+	@media (max-width: 560px) {
+		.lifestyle {
+			padding: 64px 0;
+		}
+
+		.lifestyle-photos {
+			min-height: auto;
+			display: grid;
+			gap: 18px;
+		}
+
+		.lifestyle-photos img {
+			position: static;
+			width: 100%;
+			border-width: 7px;
+		}
+
+		.photo-large,
+		.photo-small {
+			aspect-ratio: 1.08;
+		}
+
+		.split-heading {
+			gap: 24px;
+		}
+
+		.care-screens {
+			min-height: 410px;
+			margin-left: -20px;
+			margin-right: -20px;
+		}
+
+		.care-phone {
+			width: 64%;
+			border-width: 7px;
+			border-radius: 26px;
+		}
+
+		.btn-primary-lg {
+			width: 100%;
+		}
+	}
+</style>
