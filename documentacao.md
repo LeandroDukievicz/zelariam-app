@@ -47,6 +47,15 @@ Este arquivo registra o que foi decidido, quem decidiu e o que ainda aguarda esc
 - **Origem:** estado observado no wireframe e ausência de decisões de produção.
 - **Revisão:** implementação persistente depende de decisão de escopo, privacidade e arquitetura.
 
+### T-003 — Fundação técnica Android
+
+- **Data:** 27/10/2026
+- **Decisão técnica de implementação:** Android Gradle Plugin 9.4.1, Gradle Wrapper 9.6.0, Kotlin 2.4.21, Compose BOM 2026.09.00, Activity Compose 1.13.0, Navigation Compose 2.10.2, `compileSdk`/`targetSdk` 37 e `minSdk` 26.
+- **Origem:** configuração inicial baseada na documentação oficial consultada e nos SDKs instalados no ambiente.
+- **Motivo:** começar com uma configuração Android atual, versionada e compatível com a fundação Compose.
+- **Verificação:** `./gradlew :app:assembleDebug --no-daemon` concluiu com sucesso em 27/10/2026.
+- **Revisão:** revalidar versões e requisitos de distribuição antes de publicar na loja.
+
 ## Questões pendentes do proprietário
 
 ### P-001 — Nome definitivo

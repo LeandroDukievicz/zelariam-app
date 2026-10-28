@@ -6,4 +6,6 @@ O roadmap e o levantamento estão em [`roadmap.md`](roadmap.md); decisões estã
 
 ## Desenvolvimento
 
-Requer Android Studio/Android SDK, JDK compatível e Gradle Wrapper. Quando a configuração Android estiver criada, execute `./gradlew installDebug` com um emulador ou dispositivo conectado.
+Requer Android Studio/Android SDK, JDK compatível e Gradle Wrapper. Compile com `./gradlew :app:assembleDebug`; para instalar em emulador ou dispositivo conectado, use `./gradlew :app:installDebug`.
+
+O APK de desenvolvimento sai em `app/build/outputs/apk/debug/app-debug.apk`.

@@ -47,15 +47,17 @@ A organização em fases, bloqueios, critérios de saída e separação entre di
 
 ## Fase 1 — Fundação Android
 
-**Estado:** em andamento.
+**Estado:** parcial. O módulo `app` já abre em Kotlin/Compose e compila; o tema e os componentes da referência ainda serão portados.
 
-- [ ] Criar projeto Android Kotlin com Gradle Wrapper, aplicação mínima e configuração local reproduzível.
-- [ ] Configurar versões fixas em catálogo Gradle; manter Java toolchain e SDK compatíveis com o Android SDK disponível.
+- [x] Criar projeto Android Kotlin com Gradle Wrapper, aplicação mínima e configuração local reproduzível.
+- [x] Configurar versões fixas em catálogo Gradle; manter Java toolchain e SDK compatíveis com o Android SDK disponível.
 - [ ] Criar tema Compose, tokens de cor, escala tipográfica, espaçamentos, cartões, botões, badges, avatares e ícones do wireframe.
 - [ ] Incorporar DM Sans e DM Serif Display do material de referência, preservando a licença aplicável.
 - [ ] Criar navegação local para todos os artboards sem serviço externo.
 
 **Critério de saída:** o app instala/abre localmente e os elementos básicos reproduzem o sistema visual do wireframe.
+
+**Evidência atual:** `./gradlew :app:assembleDebug --no-daemon` concluiu com `BUILD SUCCESSFUL`; APK de desenvolvimento em `app/build/outputs/apk/debug/app-debug.apk`. O launcher ainda é somente uma tela temporária.
 
 ## Fase 2 — Portar o front-end fiel
 
