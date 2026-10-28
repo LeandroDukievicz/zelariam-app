@@ -28,5 +28,6 @@
 - Registre toda decisão de produto ou arquitetura e sua origem em [`documentacao.md`](documentacao.md), distinguindo escolhas do proprietário de escolhas técnicas de implementação e de questões pendentes.
 - Atualize [`roadmap.md`](roadmap.md) quando uma entrega mudar de estado, registrando dependências e critérios objetivos de conclusão.
 - Faça um commit focado a cada feature concluída, como solicitado pelo proprietário; não misture features independentes no mesmo commit.
-- O proprietário autorizou enviar commits ao repositório remoto, mas o destino ainda precisa ser confirmado. Não publique este app no repositório `Zelariam-Landing-Page` sem confirmação explícita do destino.
+- O repositório remoto autorizado é `LeandroDukievicz/zelariam-app`, público. A landing page Astro existente foi preservada na raiz ao adicionar o app Android; não apague nem substitua esses arquivos sem instrução explícita.
+- O proprietário autorizou publicar os commits de feature no branch `main` desse repositório.
 - Nunca inclua credenciais, dados reais de saúde ou arquivos locais de configuração no Git.

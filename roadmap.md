@@ -42,7 +42,7 @@ A organização em fases, bloqueios, critérios de saída e separação entre di
 - [ ] Definir se e quando dados reais serão tratados; registrar finalidade, acesso, retenção e exclusão após revisão apropriada de privacidade/jurídica.
 - [ ] Definir recrutamento, suporte, métrica e critérios de sucesso/parada antes de qualquer piloto.
 - [ ] Decidir backend, contas, sincronização, notificações reais e hospedagem quando houver escopo aprovado.
-- [ ] Confirmar o repositório remoto de publicação. O único repositório correspondente encontrado até agora chama-se `Zelariam-Landing-Page`; não presumir que o app deve ser publicado nele.
+- [x] Confirmar o repositório remoto público `LeandroDukievicz/zelariam-app`; a landing page já existente foi mantida no mesmo repositório.
 
 **Critério de saída:** decisões de produto e piloto documentadas sem depender de inferências do código.
 

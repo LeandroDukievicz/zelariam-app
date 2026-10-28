@@ -30,7 +30,7 @@ Este arquivo registra o que foi decidido, quem decidiu e o que ainda aguarda esc
 - **Data:** 27/10/2026
 - **Decisão:** manter este arquivo e fazer um commit a cada feature concluída.
 - **Origem:** instrução explícita do proprietário.
-- **Estado do remoto:** foi encontrado o repositório `LeandroDukievicz/Zelariam-Landing-Page`, cujo nome indica escopo de landing page. O proprietário foi consultado se o app deve entrar nele ou em outro repositório. Não publicar nele até confirmar o destino.
+- **Estado do remoto:** após confirmação explícita do proprietário, o repositório público `LeandroDukievicz/Zelariam-Landing-Page` foi renomeado para [`LeandroDukievicz/zelariam-app`](https://github.com/LeandroDukievicz/zelariam-app). A landing page foi preservada junto do aplicativo Android; os cinco commits de implementação foram enviados ao branch `main`.
 
 ### T-001 — Framework de interface
 
@@ -110,9 +110,9 @@ Definir se haverá conta, API, banco, sincronização, notificações, analytics
 
 Definir recrutamento, suporte, métrica de ativação, critérios de sucesso/parada e duração antes de iniciar qualquer piloto.
 
-### P-008 — Repositório remoto
+### P-008 — Repositório remoto (resolvido)
 
-Confirmar se o app Android deve ser publicado junto à landing page em `Zelariam-Landing-Page` ou em outro repositório. A autorização para publicar existe; falta identificar o destino correto.
+O proprietário escolheu o repositório público [`LeandroDukievicz/zelariam-app`](https://github.com/LeandroDukievicz/zelariam-app), renomeado de `Zelariam-Landing-Page` em 27/10/2026. A landing page Astro foi preservada e o histórico do app foi unido ao branch `main` sem sobrescrever os arquivos remotos.
 
 ## Referência técnica consultada
 
