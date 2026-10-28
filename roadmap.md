@@ -1,8 +1,8 @@
 # Roadmap — Cuidar+ / Zelariam
 
 **Atualizado em:** 27 de outubro de 2026  
-**Estado atual:** começo da implementação Android; o workspace contém o wireframe standalone, sem aplicativo nativo, backend ou dados persistidos.  
-**Próxima entrega:** portar para Kotlin/Jetpack Compose as 15 telas do wireframe, com navegação local e dados demonstrativos.
+**Estado atual:** fundação Android e port das 15 telas em Kotlin/Jetpack Compose concluídos; build debug aprovado. Interações locais demonstrativas iniciadas.  
+**Próxima entrega:** finalizar estado compartilhado em memória para rotina, doses e ocorrências, sem persistência.
 
 ## Levantamento do ponto de partida
 
@@ -47,38 +47,38 @@ A organização em fases, bloqueios, critérios de saída e separação entre di
 
 ## Fase 1 — Fundação Android
 
-**Estado:** parcial. O módulo `app` já abre em Kotlin/Compose e compila; o tema e os componentes da referência ainda serão portados.
+**Estado:** concluída para desenvolvimento local.
 
 - [x] Criar projeto Android Kotlin com Gradle Wrapper, aplicação mínima e configuração local reproduzível.
 - [x] Configurar versões fixas em catálogo Gradle; manter Java toolchain e SDK compatíveis com o Android SDK disponível.
 - [x] Criar tema Compose, tokens de cor, escala tipográfica, cartões, botões, badges, avatares e ícones compartilhados.
 - [x] Incorporar DM Sans e DM Serif Display do material de referência e incluir suas licenças OFL.
-- [ ] Criar navegação local para todos os artboards sem serviço externo.
+- [x] Criar navegação local para todos os artboards sem serviço externo.
 
 **Critério de saída:** o app instala/abre localmente e os elementos básicos reproduzem o sistema visual do wireframe.
 
-**Evidência atual:** `./gradlew :app:assembleDebug --no-daemon` concluiu com `BUILD SUCCESSFUL`; APK de desenvolvimento em `app/build/outputs/apk/debug/app-debug.apk`. O launcher ainda é somente uma tela temporária.
+**Evidência atual:** `./gradlew :app:assembleDebug --no-daemon` concluiu com `BUILD SUCCESSFUL`; APK de desenvolvimento em `app/build/outputs/apk/debug/app-debug.apk`. A navegação abre pelo onboarding e liga as 15 telas; não havia emulador/dispositivo ADB conectado para revisão visual em execução.
 
 ## Fase 2 — Portar o front-end fiel
 
-**Estado:** não iniciado.
+**Estado:** implementada; revisão visual em emulador/dispositivo permanece pendente.
 
-- [ ] Onboarding familiar e cadastro da pessoa cuidada.
-- [ ] Hoje e rotina diária.
-- [ ] Medicamentos e registro de dose.
-- [ ] Ocorrências e sinais vitais.
-- [ ] Agenda e consultas.
-- [ ] Cuidadores/plantões e família/permissões.
-- [ ] Central de alertas e relatório médico.
-- [ ] Modo cuidador e modo idoso simplificado.
-- [ ] Navegação inferior e ligações entre telas conforme a referência.
-- [ ] Preservar as duas paletas apresentadas pelo sistema visual, mantendo o modo escuro inicial conforme o wireframe.
+- [x] Onboarding familiar e cadastro da pessoa cuidada.
+- [x] Hoje e rotina diária.
+- [x] Medicamentos e registro de dose.
+- [x] Ocorrências e sinais vitais.
+- [x] Agenda e consultas.
+- [x] Cuidadores/plantões e família/permissões.
+- [x] Central de alertas e relatório médico.
+- [x] Modo cuidador e modo idoso simplificado.
+- [x] Navegação inferior e ligações entre telas conforme a referência.
+- [x] Preservar as duas paletas apresentadas pelo sistema visual, mantendo o modo escuro inicial conforme o wireframe.
 
 **Critério de saída:** as 15 telas têm correspondência navegável; textos, cartões, cores, hierarquia e estados visuais foram portados, sem conteúdo de produção inventado.
 
 ## Fase 3 — Interações locais de demonstração
 
-**Estado:** pode iniciar após a Fase 2; não depende de conta ou serviço.
+**Estado:** em andamento após o port do front-end; não depende de conta ou serviço.
 
 - [ ] Criar um único estado demonstrativo em memória para rotina, doses e ocorrências.
 - [ ] Permitir marcar/desmarcar tarefa e registrar, adiar ou corrigir uma dose fictícia.
@@ -90,7 +90,7 @@ A organização em fases, bloqueios, critérios de saída e separação entre di
 
 ## Fase 4 — Preparação técnica para decisões futuras
 
-**Estado:** futuro; avançar apenas nos itens que não exijam as decisões da Fase 0.
+**Estado:** futuro; revisão visual em dispositivo e documentação de estados de acessibilidade continuam pendentes.
 
 - [ ] Separar modelos de demonstração das composables e centralizar fixtures.
 - [ ] Definir estados de carregamento, vazio, erro e confirmação para fluxos futuros sem ligá-los a serviços reais.

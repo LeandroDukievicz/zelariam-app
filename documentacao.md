@@ -62,7 +62,14 @@ Este arquivo registra o que foi decidido, quem decidiu e o que ainda aguarda esc
 - **Decisão técnica de implementação:** extrair do wireframe as paletas clara/escura e as fontes DM Sans e DM Serif Display; expor componentes Compose compartilhados para texto, cartão, botão, badge, avatar e ícone.
 - **Origem:** inspeção direta do HTML fornecido.
 - **Licenças:** fontes incluídas em TTF com as respectivas licenças SIL Open Font License em `app/src/main/assets/fonts-licenses/`.
-- **Estado:** tokens, fontes e componentes-base implementados; as telas ainda serão portadas em etapas.
+- **Estado:** tokens, fontes, componentes-base e telas Compose implementados; build debug concluído com sucesso. A revisão visual em dispositivo permanece pendente porque não havia dispositivo/emulador conectado no ambiente.
+
+### T-005 — Navegação e telas Compose
+
+- **Data:** 27/10/2026
+- **Decisão técnica de implementação:** organizar as 15 telas do wireframe por fluxo Compose e usar Navigation Compose para ligações locais, com onboarding como início e barra inferior nas áreas principais.
+- **Origem:** decisão técnica para atender ao port nativo solicitado sem backend.
+- **Estado:** implementado; confirmação visual final depende de rodar em emulador ou aparelho.
 
 ## Questões pendentes do proprietário
 

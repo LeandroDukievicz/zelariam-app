@@ -78,6 +78,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -96,6 +97,7 @@ fun CText(
     maxLines: Int = Int.MAX_VALUE,
     overflow: TextOverflow = TextOverflow.Clip,
     lineHeight: TextUnit = TextUnit.Unspecified,
+    decoration: TextDecoration? = null,
 ) {
     val palette = LocalCuidarPalette.current
     val fonts = LocalCuidarFonts.current
@@ -109,6 +111,7 @@ fun CText(
         maxLines = maxLines,
         overflow = overflow,
         lineHeight = lineHeight,
+        textDecoration = decoration,
     )
 }
 
