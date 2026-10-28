@@ -56,6 +56,14 @@ Este arquivo registra o que foi decidido, quem decidiu e o que ainda aguarda esc
 - **Verificação:** `./gradlew :app:assembleDebug --no-daemon` concluiu com sucesso em 27/10/2026.
 - **Revisão:** revalidar versões e requisitos de distribuição antes de publicar na loja.
 
+### T-004 — Tokens e fontes da referência
+
+- **Data:** 27/10/2026
+- **Decisão técnica de implementação:** extrair do wireframe as paletas clara/escura e as fontes DM Sans e DM Serif Display; expor componentes Compose compartilhados para texto, cartão, botão, badge, avatar e ícone.
+- **Origem:** inspeção direta do HTML fornecido.
+- **Licenças:** fontes incluídas em TTF com as respectivas licenças SIL Open Font License em `app/src/main/assets/fonts-licenses/`.
+- **Estado:** tokens, fontes e componentes-base implementados; as telas ainda serão portadas em etapas.
+
 ## Questões pendentes do proprietário
 
 ### P-001 — Nome definitivo

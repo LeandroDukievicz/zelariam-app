@@ -51,8 +51,8 @@ A organização em fases, bloqueios, critérios de saída e separação entre di
 
 - [x] Criar projeto Android Kotlin com Gradle Wrapper, aplicação mínima e configuração local reproduzível.
 - [x] Configurar versões fixas em catálogo Gradle; manter Java toolchain e SDK compatíveis com o Android SDK disponível.
-- [ ] Criar tema Compose, tokens de cor, escala tipográfica, espaçamentos, cartões, botões, badges, avatares e ícones do wireframe.
-- [ ] Incorporar DM Sans e DM Serif Display do material de referência, preservando a licença aplicável.
+- [x] Criar tema Compose, tokens de cor, escala tipográfica, cartões, botões, badges, avatares e ícones compartilhados.
+- [x] Incorporar DM Sans e DM Serif Display do material de referência e incluir suas licenças OFL.
 - [ ] Criar navegação local para todos os artboards sem serviço externo.
 
 **Critério de saída:** o app instala/abre localmente e os elementos básicos reproduzem o sistema visual do wireframe.
